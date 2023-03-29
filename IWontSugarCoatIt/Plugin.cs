@@ -50,6 +50,7 @@ namespace IWontSugarCoatIt
                 Image = Instantiate(p.Image);
                 Image.transform.SetParent(gameObject.transform);
                 Image.transform.localPosition = Vector3.zero;
+                Image.transform.localScale = new Vector3(4, 4, 4);
                 Aud = Instantiate(p.Aud);
                 Aud.SetActive(true);
                 Image.transform.SetParent(Parryflash.transform);
