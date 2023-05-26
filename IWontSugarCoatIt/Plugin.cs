@@ -40,7 +40,7 @@ namespace IWontSugarCoatIt
         [HarmonyPrefix]
         public static void HUDOptions_Start(HUDOptions __instance)
         {
-            if (__instance.gameObject.GetComponent<DAAYYM>()) __instance.gameObject.AddComponent<DAAYYM>();
+            if (!__instance.gameObject.GetComponent<DAAYYM>()) __instance.gameObject.AddComponent<DAAYYM>();
         }
     }
     public class DAAYYM : MonoBehaviour
