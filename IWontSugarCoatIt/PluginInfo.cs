@@ -7,6 +7,6 @@
     {
         public const string GUID = "com.Graze.UltraKill.IWSCI";
         public const string Name = "I WONT SUGAR COAT IT";
-        public const string Version = "1.0.2";
+        public const string Version = "2.0.0";
     }
 }

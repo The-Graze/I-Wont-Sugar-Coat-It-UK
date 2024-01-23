@@ -1,57 +1,57 @@
 ﻿using BepInEx;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using ULTRAKIT;
 
 namespace IWontSugarCoatIt
 {
     [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
     public class Plugin : BaseUnityPlugin
     {
-        public GameObject Image;
-        public GameObject Aud;
-        GameObject loader;
-        List<HUDOptions> hud = new List<HUDOptions>();
         void Awake()
         {
-            Stream str = Assembly.GetExecutingAssembly().GetManifestResourceStream("IWontSugarCoatIt.Assets.f");
-            AssetBundle bundle = AssetBundle.LoadFromStream(str);
-            loader = bundle.LoadAsset<GameObject>("f");
-            Image = loader.transform.GetChild(0).GetChild(0).gameObject;
-            Aud = loader.transform.GetChild(1).gameObject;
+            HarmonyPatches.ApplyHarmonyPatches();
         }
-        void Update()
+    }
+    [HarmonyPatch(typeof(HUDOptions))]
+    [HarmonyPatch("Start", MethodType.Normal)]
+    internal class HudPatch
+    {
+        private static void Postfix(HUDOptions __instance)
         {
-            hud = GameObject.FindObjectsOfType<HUDOptions>().ToList();
-            foreach (HUDOptions h in hud) 
+            if (__instance.GetComponent<DAAYYM>() == null)
             {
-                if (h.gameObject.GetComponent<DAAYYM>() == null)
-                {
-                    h.gameObject.AddComponent<DAAYYM>();
-                }
+                __instance.gameObject.AddComponent<DAAYYM>();
             }
         }
     }
+    public static class cAssets
+    {
+        static Stream str = Assembly.GetExecutingAssembly().GetManifestResourceStream("IWontSugarCoatIt.Assets.f");
+        static AssetBundle bundle = AssetBundle.LoadFromStream(str);
+        static GameObject loader = bundle.LoadAsset<GameObject>("f");
+        public static GameObject Image = loader.transform.GetChild(0).GetChild(0).gameObject;
+        public static GameObject Aud = loader.transform.GetChild(1).gameObject;
+    }
     public class DAAYYM : MonoBehaviour
     {
-        Plugin p = GameObject.FindObjectOfType<Plugin>();
         GameObject Parryflash;
         GameObject Image;
         GameObject Aud;
         void Awake()
         {
-            if (Parryflash == null)
+            if (Parryflash == null)                                                   
             {
-                Parryflash = gameObject.transform.GetChild(8).gameObject;
-                Image = Instantiate(p.Image);
+                Parryflash = transform.Find("ParryFlash").gameObject;
+                Image = Instantiate(cAssets.Image);
                 Image.transform.SetParent(gameObject.transform);
                 Image.transform.localPosition = Vector3.zero;
                 Image.transform.localScale = new Vector3(4, 4, 4);
-                Aud = Instantiate(p.Aud);
+                Aud = Instantiate(cAssets.Aud);
                 Aud.SetActive(true);
                 Image.transform.SetParent(Parryflash.transform);
                 Aud.transform.SetParent(gameObject.transform);
