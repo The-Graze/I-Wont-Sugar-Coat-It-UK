@@ -17,11 +17,11 @@ namespace IWontSugarCoatIt
             HarmonyPatches.ApplyHarmonyPatches();
         }
     }
-    [HarmonyPatch(typeof(HUDOptions))]
+    [HarmonyPatch(typeof(ColorBlindActivator))]
     [HarmonyPatch("Start", MethodType.Normal)]
     internal class HudPatch
     {
-        private static void Postfix(HUDOptions __instance)
+        private static void Postfix(ColorBlindActivator __instance)
         {
             if (__instance.GetComponent<DAAYYM>() == null)
             {
